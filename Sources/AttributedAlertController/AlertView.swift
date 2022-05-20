@@ -9,7 +9,7 @@
 import UIKit
 
 protocol AlertViewDelegate: AnyObject {
-    func alertView(_ alertView: AlertView, buttonTappedAtIndex index: Int)
+    func alertView(_ alertView: AlertView, buttonUniqueId: Int)
 }
 
 /// A class that displays the overall view for the alert.
@@ -232,7 +232,7 @@ class AlertView: UIView, AlertActionSequenceViewDelegate {
     
     // MARK: - AlertActionSequenceViewDelegate
     
-    func alertActionSequenceView(_ actionView: AlertActionSequenceView, tappedAtIndex index: Int) {
-        delegate?.alertView(self, buttonTappedAtIndex: index)
+    func alertActionSequenceView(_ actionView: AlertActionSequenceView, uniqueId: Int) {
+        delegate?.alertView(self, buttonUniqueId: uniqueId)
     }
 }

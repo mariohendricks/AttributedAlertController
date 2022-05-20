@@ -16,7 +16,7 @@ public class AttributedAlertAction: UIAlertAction {
     private var myStyle: UIAlertAction.Style
     
     internal var isPreferredAction = false
-    
+    internal var uniqueId = -1
     
     /// The title of the action's button
     public override var title: String?

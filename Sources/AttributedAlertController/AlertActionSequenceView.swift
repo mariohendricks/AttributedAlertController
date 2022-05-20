@@ -9,7 +9,7 @@
 import UIKit
 
 protocol AlertActionSequenceViewDelegate: AnyObject {
-    func alertActionSequenceView(_ actionView: AlertActionSequenceView, tappedAtIndex index: Int)
+    func alertActionSequenceView(_ actionView: AlertActionSequenceView, uniqueId: Int)
 }
 
 /// A class that displays the view of actions (buttons) available in the alert.
@@ -50,6 +50,8 @@ class AlertActionSequenceView: UIControl {
             return label
         }()
         
+        internal var uniqueId = -1
+        
         override init(frame: CGRect) {
             super.init(frame: frame)
             initialize()
@@ -60,10 +62,11 @@ class AlertActionSequenceView: UIControl {
             initialize()
         }
         
-        convenience init(action: AttributedAlertAction, disabledTintColor: UIColor?) {
+        convenience init(action: AttributedAlertAction, disabledTintColor: UIColor?, uniqueId: Int) {
             self.init()
             initialize()
             
+            self.uniqueId  = uniqueId
             self.isEnabled = action.isEnabled
             self.titleLabel.text = action.title
             
@@ -151,7 +154,7 @@ class AlertActionSequenceView: UIControl {
         let orderedActions = self.orderActions(actions)
         
         if let alertAction = orderedActions.first {
-            let actionView = ActionView(action: alertAction, disabledTintColor: nil)
+            let actionView = ActionView(action: alertAction, disabledTintColor: nil, uniqueId: alertAction.uniqueId)
             stackView.addArrangedSubview(actionView)
         }
         
@@ -159,7 +162,7 @@ class AlertActionSequenceView: UIControl {
             let separator = SeparatorView(buttonOrientation: self.buttonLayout)
             stackView.addArrangedSubview(separator)
             
-            let actionView = ActionView(action: alertAction, disabledTintColor: nil)
+            let actionView = ActionView(action: alertAction, disabledTintColor: nil, uniqueId: alertAction.uniqueId)
             stackView.addArrangedSubview(actionView)
             
             // Set the width of the new action to be equal to the width of the first action
@@ -178,7 +181,7 @@ class AlertActionSequenceView: UIControl {
         }
         else {
             for alertAction in actions {
-                let actionView = ActionView(action: alertAction, disabledTintColor: nil)
+                let actionView = ActionView(action: alertAction, disabledTintColor: nil, uniqueId: -1)
                 let labelWidth = actionView.titleLabel.intrinsicContentSize.width
                 
                 if labelWidth > self.maxHorizontalButtonWidth {
@@ -196,13 +199,11 @@ class AlertActionSequenceView: UIControl {
     /// - Returns: An array of action in the order that they should be presented
     private func orderActions(_ actions: [AttributedAlertAction]) -> [AttributedAlertAction]
     {
-        var orderedActions    = [AttributedAlertAction]()
-        var cancelActionCount = 0
+        var orderedActions = [AttributedAlertAction]()
         
         for action in actions {
             if isInitialGroup(style: action.style) {
                 orderedActions.append(action)
-                cancelActionCount += 1
             }
         }
         
@@ -300,13 +301,7 @@ class AlertActionSequenceView: UIControl {
     }
     
     @objc private func handleTap(on actionView: ActionView) {
-        let index = stackView.arrangedSubviews
-            .compactMap { $0 as? ActionView }
-            .filter { $0.isEnabled }
-            .firstIndex(where: { $0 === actionView })
         
-        if let index = index {
-            delegate?.alertActionSequenceView(self, tappedAtIndex: index)
-        }
+        delegate?.alertActionSequenceView(self, uniqueId: actionView.uniqueId)
     }
 }

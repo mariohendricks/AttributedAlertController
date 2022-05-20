@@ -160,6 +160,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         if action.style == .cancel && self.preferredAction == nil {
             action.isPreferredAction = true
         }
+        action.uniqueId = self.actions.count
         self.actions.append(action)
     }
     
@@ -311,13 +312,16 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
     
     // MARK: - AlertViewDelegate
     
-    func alertView(_ alertView: AlertView, buttonTappedAtIndex index: Int) {
-        if actions.indices.contains(index) {
-            let action = actions[index]
-            if let handler = action.handler {
+    func alertView(_ alertView: AlertView, buttonUniqueId: Int) {
+        // In theory, the buttonUniqueId is the index into the actions array, but this is safer, in case the implementation
+        // changes later on. 
+        for action in actions {
+            if action.uniqueId == buttonUniqueId, let handler = action.handler {
                 handler(action)
+                break
             }
         }
+        
         dismiss(animated: true, completion: nil)
     }
 
