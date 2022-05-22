@@ -8,11 +8,17 @@
 
 import UIKit
 
+/// A class to create a view controller that displays a modal (pop-up) alert to the user, with the specified title, message, buttons and optional text input fields.
 public class AttributedAlertController: UIViewController, UIViewControllerTransitioningDelegate, AlertViewDelegate {
     
     internal enum Layout {
         static let verticalInset: CGFloat = 44
         static let width: CGFloat = 270
+    }
+    internal enum FontSize {
+        static let forTitle: CGFloat = 17
+        static let forMessage: CGFloat = 13
+        static let forTextBox: CGFloat = 13
     }
 
     // MARK: Public Properties
@@ -55,6 +61,14 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         }
     }
     
+    private var labelColor: UIColor = {
+        var labelColor = UIColor.black
+        if #available(iOS 13.0, *) {
+            labelColor = .label
+        }
+        return labelColor
+    }()
+    
     /// Descriptive text that provides more details about the reason for the alert.
     public var message: String? {
         get {
@@ -93,27 +107,14 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         
         self.title = title
         
-        var labelColor = UIColor.black
-        if #available(iOS 13.0, *) {
-            labelColor = .label
-        }
-        
-        if let titleText = title {
-            self.attributedTitle = NSAttributedString(
-                string: titleText,
-                attributes: [
-                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 17, weight: .semibold),
-                    NSAttributedString.Key.foregroundColor : labelColor
-                ]
-            )
-        }
+        self.setTitleWithStandardAttributes(title: title)
         
         if let messageText = message {
             self.attributedMessage = NSAttributedString(
                 string: messageText,
                 attributes: [
-                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: 13, weight: .regular),
-                    NSAttributedString.Key.foregroundColor : labelColor
+                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: FontSize.forMessage, weight: .regular),
+                    NSAttributedString.Key.foregroundColor : self.labelColor
                 ]
             )
         }
@@ -131,6 +132,22 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         super.init(nibName: nil, bundle: nil)
         
         self.attributedTitle   = title
+        self.attributedMessage = message
+        
+        self.configure()
+    }
+    
+    /// Creates and returns a view controller for displaying an alert to the user
+    /// - Parameters:
+    ///   - title: The title of the alert. Use this string to get the user's attention and communicate the reason for the alert.
+    ///   - message: Descriptive text with formatting attributes that provides additional details about the reason for the alert.
+    ///   - preferredStyle: The style to use when presenting the alert controller. Only a modal alert (Style.alert) is supported
+    public init(title: String?, message: NSAttributedString?, preferredStyle: UIAlertController.Style) {
+        self.preferredStyle = preferredStyle
+        super.init(nibName: nil, bundle: nil)
+        
+        self.title = title
+        self.setTitleWithStandardAttributes(title: title)
         self.attributedMessage = message
         
         self.configure()
@@ -174,7 +191,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         }
         // Create and configure the new text field. We configure here so that the configuration handler can change, if needed
         let newTextField = UITextField()
-        newTextField.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        newTextField.font = UIFont.systemFont(ofSize: FontSize.forTextBox, weight: .regular)
         newTextField.backgroundColor = .clear
         
         self.textFields!.append(newTextField)
@@ -184,7 +201,6 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
             handler(newTextField)
         }
     }
-    
     
     /// Sets the receiver's property specified by a given key to a given value.
     /// - Parameters:
@@ -198,9 +214,8 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         else if key == "attributedTitle", let newTitle = value as! NSAttributedString? {
             self.attributedTitle = newTitle
         }
-        else {
-            super.setValue(value, forKey: key)
-        }
+        
+        super.setValue(value, forKey: key)
     }
     
     // MARK: - View Controller Lifecycle Functions
@@ -230,12 +245,14 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         
     }
     
+    /// Observer function that is called when the keyboard is about to show.
+    /// - Parameter sender: The notification that triggered the function to be called.
+    /// - Remark: In some cases, the safe area is not adjusted when the keyboard shows. If that is the case, we adjust the position of the alert upwards by half of the
+    ///           height of the keyboard so that it is centered in the remaining area.
     @objc func keyboardWillShow(sender: NSNotification) {
         let screenHeight = UIScreen.main.bounds.height
         let safeAreaHeight = view.safeAreaLayoutGuide.layoutFrame.height
         let unsafeHeight   = screenHeight - safeAreaHeight
-        print ("In \(sender.name.rawValue): screen height is \(screenHeight) and the safe area height is \(safeAreaHeight).")
-        
         
         let keyboardFrameKey = UIResponder.keyboardFrameEndUserInfoKey
         if let userInfo = sender.userInfo, let frameValue = userInfo[keyboardFrameKey] as? NSValue {
@@ -269,6 +286,21 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
             yPosition!,
             alertView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: Layout.verticalInset)
         ])
+    }
+    
+    /// Sets the attributed title using the "standard" formatting for titles in an alert.
+    /// - Parameter title: The title of the alert.
+    private func setTitleWithStandardAttributes(title: String?) {
+        
+        if let titleText = title {
+            self.attributedTitle = NSAttributedString(
+                string: titleText,
+                attributes: [
+                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: FontSize.forTitle, weight: .semibold),
+                    NSAttributedString.Key.foregroundColor : self.labelColor
+                ]
+            )
+        }
     }
     
     private func setupViewModel() {
