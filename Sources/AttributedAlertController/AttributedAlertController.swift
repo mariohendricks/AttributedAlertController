@@ -199,6 +199,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         // Create and configure the new text field. We configure here so that the configuration handler can change, if needed
         let newTextField = UITextField()
         newTextField.font = UIFont.systemFont(ofSize: FontSize.forTextBox, weight: .regular)
+        newTextField.autocorrectionType = .no
         newTextField.backgroundColor = .clear
         
         self.textFields!.append(newTextField)
