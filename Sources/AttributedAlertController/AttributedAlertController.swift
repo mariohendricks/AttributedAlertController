@@ -100,8 +100,8 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
     /// - Parameters:
     ///   - title: The title of the alert. Use this string to get the user's attention and communicate the reason for the alert.
     ///   - message: Descriptive text that provides additional details about the reason for the alert.
-    ///   - preferredStyle: The style to use when presenting the alert controller. Only a modal alert (Style.alert) is supported
-    public init(title: String?, message: String?, preferredStyle: UIAlertController.Style) {
+    ///   - preferredStyle: The style to use when presenting the alert controller. Only a modal alert (Style.alert) is supported, which is the default.
+    public init(title: String?, message: String?, preferredStyle: UIAlertController.Style = .alert) {
         self.preferredStyle = preferredStyle
         super.init(nibName: nil, bundle: nil)
         
@@ -126,8 +126,8 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
     /// - Parameters:
     ///   - title: The attributed title of the alert. Use this string to get the user's attention and communicate the reason for the alert.
     ///   - message: Descriptive text with formatting attributes that provides additional details about the reason for the alert.
-    ///   - preferredStyle: The style to use when presenting the alert controller. Only a modal alert (Style.alert) is supported
-    public init(title: NSAttributedString?, message: NSAttributedString?, preferredStyle: UIAlertController.Style) {
+    ///   - preferredStyle: The style to use when presenting the alert controller. Only a modal alert (Style.alert) is supported, which is the default
+    public init(title: NSAttributedString?, message: NSAttributedString?, preferredStyle: UIAlertController.Style = .alert) {
         self.preferredStyle = preferredStyle
         super.init(nibName: nil, bundle: nil)
         
@@ -141,8 +141,8 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
     /// - Parameters:
     ///   - title: The title of the alert. Use this string to get the user's attention and communicate the reason for the alert.
     ///   - message: Descriptive text with formatting attributes that provides additional details about the reason for the alert.
-    ///   - preferredStyle: The style to use when presenting the alert controller. Only a modal alert (Style.alert) is supported
-    public init(title: String?, message: NSAttributedString?, preferredStyle: UIAlertController.Style) {
+    ///   - preferredStyle: The style to use when presenting the alert controller. Only a modal alert (Style.alert) is supported, which is the default
+    public init(title: String?, message: NSAttributedString?, preferredStyle: UIAlertController.Style = .alert) {
         self.preferredStyle = preferredStyle
         super.init(nibName: nil, bundle: nil)
         
