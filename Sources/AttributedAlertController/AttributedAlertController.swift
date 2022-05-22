@@ -61,6 +61,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         }
     }
     
+    /// The default color of the alert title and message
     public private(set) static var labelColor: UIColor = {
         var labelColor = UIColor.black
         if #available(iOS 13.0, *) {
@@ -68,6 +69,12 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         }
         return labelColor
     }()
+    
+    /// The default font of the alert message
+    public private(set) static var messageFont = UIFont.systemFont(ofSize: FontSize.forMessage, weight: .regular)
+    
+    /// The default font of the alert title
+    public private(set) static var titleFont   = UIFont.systemFont(ofSize: FontSize.forTitle, weight: .semibold)
     
     /// Descriptive text that provides more details about the reason for the alert.
     public var message: String? {
@@ -113,7 +120,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
             self.attributedMessage = NSAttributedString(
                 string: messageText,
                 attributes: [
-                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: FontSize.forMessage, weight: .regular),
+                    NSAttributedString.Key.font : AttributedAlertController.messageFont,
                     NSAttributedString.Key.foregroundColor : AttributedAlertController.labelColor
                 ]
             )
@@ -296,7 +303,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
             self.attributedTitle = NSAttributedString(
                 string: titleText,
                 attributes: [
-                    NSAttributedString.Key.font : UIFont.systemFont(ofSize: FontSize.forTitle, weight: .semibold),
+                    NSAttributedString.Key.font : AttributedAlertController.titleFont,
                     NSAttributedString.Key.foregroundColor : AttributedAlertController.labelColor
                 ]
             )
