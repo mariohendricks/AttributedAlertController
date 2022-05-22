@@ -61,7 +61,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         }
     }
     
-    private var labelColor: UIColor = {
+    public private(set) static var labelColor: UIColor = {
         var labelColor = UIColor.black
         if #available(iOS 13.0, *) {
             labelColor = .label
@@ -114,7 +114,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
                 string: messageText,
                 attributes: [
                     NSAttributedString.Key.font : UIFont.systemFont(ofSize: FontSize.forMessage, weight: .regular),
-                    NSAttributedString.Key.foregroundColor : self.labelColor
+                    NSAttributedString.Key.foregroundColor : AttributedAlertController.labelColor
                 ]
             )
         }
@@ -297,7 +297,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
                 string: titleText,
                 attributes: [
                     NSAttributedString.Key.font : UIFont.systemFont(ofSize: FontSize.forTitle, weight: .semibold),
-                    NSAttributedString.Key.foregroundColor : self.labelColor
+                    NSAttributedString.Key.foregroundColor : AttributedAlertController.labelColor
                 ]
             )
         }
