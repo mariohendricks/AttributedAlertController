@@ -357,12 +357,12 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         // changes later on. 
         for action in actions {
             if action.uniqueId == buttonUniqueId, let handler = action.handler {
-                handler(action)
+                dismiss(animated: true) {
+                    handler(action)
+                }
                 break
             }
         }
-        
-        dismiss(animated: true, completion: nil)
     }
 
 }
