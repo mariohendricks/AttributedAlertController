@@ -117,7 +117,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         self.setTitleWithStandardAttributes(title: title)
         
         if let messageText = message {
-            self.attributedMessage = AttributedAlertController.AttributedMessageWithDefaultStyle(messageText: messageText)
+            self.attributedMessage = AttributedAlertController.AttributedMessageWithDefaultStyle(text: messageText)
         }
         
         self.configure()
@@ -170,12 +170,12 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
     // MARK: - Public Functions
     
     /// Creates and returns a mutable, attributed string containing the supplied text with the standard alert formatting (font and color)
-    /// - Parameter messageText: The initial string. This may be modified or appended to later.
+    /// - Parameter text: The initial message text. This may be modified or appended to later.
     /// - Returns: An NSMutableAttributed String containing the supplied text and the standard alert formatting
-    public static func AttributedMessageWithDefaultStyle(messageText: String) -> NSMutableAttributedString
+    public static func AttributedMessageWithDefaultStyle(text: String) -> NSMutableAttributedString
     {
         let attributedString = NSMutableAttributedString(
-            string: messageText,
+            string: text,
             attributes: [
                 NSAttributedString.Key.font : AttributedAlertController.messageFont,
                 NSAttributedString.Key.foregroundColor : AttributedAlertController.labelColor
