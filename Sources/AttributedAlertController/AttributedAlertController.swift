@@ -117,13 +117,7 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
         self.setTitleWithStandardAttributes(title: title)
         
         if let messageText = message {
-            self.attributedMessage = NSAttributedString(
-                string: messageText,
-                attributes: [
-                    NSAttributedString.Key.font : AttributedAlertController.messageFont,
-                    NSAttributedString.Key.foregroundColor : AttributedAlertController.labelColor
-                ]
-            )
+            self.attributedMessage = AttributedAlertController.AttributedMessageWithDefaultStyle(messageText: messageText)
         }
         
         self.configure()
@@ -174,6 +168,21 @@ public class AttributedAlertController: UIViewController, UIViewControllerTransi
     }
     
     // MARK: - Public Functions
+    
+    /// Creates and returns a mutable, attributed string containing the supplied text with the standard alert formatting (font and color)
+    /// - Parameter messageText: The initial string. This may be modified or appended to later.
+    /// - Returns: An NSMutableAttributed String containing the supplied text and the standard alert formatting
+    public static func AttributedMessageWithDefaultStyle(messageText: String) -> NSMutableAttributedString
+    {
+        let attributedString = NSMutableAttributedString(
+            string: messageText,
+            attributes: [
+                NSAttributedString.Key.font : AttributedAlertController.messageFont,
+                NSAttributedString.Key.foregroundColor : AttributedAlertController.labelColor
+            ]
+        )
+        return attributedString
+    }
     
     /// Attaches an action object to the alert.
     /// - Parameter action: The action object to display as part of the alert. Actions are displayed as buttons in the alert. The action object provides the button text and the action to be performed when that button is tapped.
